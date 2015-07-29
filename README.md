@@ -43,8 +43,7 @@ docker run -d -name cayley -p 64210:64210 \
 ```
 #### HTTP server (foreground) with data from host
 ```sh
-docker run --rm -it \
-  -p 64210:64210 \
+docker run --rm -it -p 64210:64210 \
   -v /path/to/data:/data \
   alectolytic/cayley http -host="0.0.0.0" \
     -db="memstore" -dbpath="/data/30kmoviedata.nq" -logtostderr=true
@@ -65,11 +64,11 @@ docker create  --entrypoint=_ -v /data -v /tmp -v /log --name cayley-data scratc
 docker run --rm -it --name cayley \
   --volumes-from cayley-data \
   --link cayley-mongo:mongo \
-  alectolytic/cayley init -host="0.0.0.0" \
+  alectolytic/cayley init \
   -db="mongo" -dbpath="mongo:27017"
 
 # start cayley as required
-docker run -d --name cayley \
+docker run -d --name cayley -p 64210:64210 \
   --volumes-from cayley-data \
   --link cayley-mongo:mongo \
   alectolytic/cayley http -host="0.0.0.0" \
