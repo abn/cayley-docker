@@ -1,0 +1,14 @@
+FROM scratch
+MAINTAINER Arun Neelicattu <arun.neelicattu@gmail.com>
+
+ADD cayley /cayley
+ADD templates /templates
+ADD static /static
+ADD docs /docs
+ADD data /data
+ADD tmp /tmp
+
+VOLUME ["/data", "/tmp"]
+EXPOSE 64210
+
+ENTRYPOINT ["/cayley"]
