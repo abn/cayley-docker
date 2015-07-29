@@ -17,11 +17,11 @@ In this example we deploy cayley with data persisted via a data container and mo
 
 #### Initialization
 ```sh
-# start mongo container
-docker run -d --name cayley-mongo mongo
-
 # create data container
-docker create  --entrypoint=_ -v /data -v /tmp -v /log --name cayley-data scratch
+docker create  --entrypoint=_ -v /data -v /data/db -v /log --name cayley-data scratch
+
+# start mongo container
+docker run -d --volumes-from cayley-data --name cayley-mongo mongo
 
 # initialize database
 docker run --rm -it --name cayley \
@@ -41,7 +41,10 @@ docker run -d --name cayley -p 64210:64210 \
 #### Starting and stopping
 You can start or stop cayley using the following command.
 ```sh
-docker [start|stop] cayley
+# Starting
+docker start cayley-mongo cayley
+# stopping
+docker stop cayley cayley-mongo
 ```
 
 #### Accessing data
