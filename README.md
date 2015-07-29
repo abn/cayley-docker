@@ -1,6 +1,16 @@
 # Cayley Docker (Cayley and nothing but cayley)
 
-This project puts [Cayley](https://github.com/google/cayley) in scratch docker container.
+This project puts [Cayley](https://github.com/google/cayley) in scratch docker container. It is available on [Docker Hub](https://registry.hub.docker.com/u/alectolytic/cayley/) and can be pulled using the following command.
+
+```sh
+docker pull alectolytic/cayley
+```
+
+You will note that this is a tiny image.
+```
+$ docker images | grep docker.io/alectolytic/cayley
+docker.io/alectolytic/cayley    latest  9f8c078ba15a    17 minutes ago  13.34 MB
+```
 
 # Usage
 
