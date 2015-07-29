@@ -7,8 +7,9 @@ ADD static /static
 ADD docs /docs
 ADD data /data
 ADD tmp /tmp
+ADD log /log
 
-VOLUME ["/data", "/tmp"]
+VOLUME ["/data", "/tmp", "/log"]
 EXPOSE 64210
 
 ENTRYPOINT ["/cayley"]

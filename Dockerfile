@@ -14,7 +14,7 @@ RUN CGO_ENABLED=0 go get -a -tags netgo -ldflags '-s' \
         --installsuffix cgo ${PACKAGE}/${COMMAND}
 
 WORKDIR ${GOPATH}/bin
-RUN mkdir assets data tmp
+RUN mkdir assets data tmp log
 RUN mv \
     ${GOPATH}/src/${PACKAGE}/static \
     ${GOPATH}/src/${PACKAGE}/templates \
@@ -23,4 +23,4 @@ RUN mv \
 
 COPY Dockerfile.final /gopath/bin/Dockerfile
 
-CMD docker build -t cayley /gopath/bin
+CMD docker build -t alectolytic/cayley /gopath/bin
