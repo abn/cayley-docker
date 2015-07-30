@@ -12,7 +12,7 @@ ENV PATH /go/bin:${PATH}
 RUN mkdir -p ${GOPATH}
 
 ENV PACKAGE github.com/google/cayley
-ENV VERSION 0.4.1
+ENV VERSION 250ad966
 ENV GO_BUILD_TAGS netgo
 ENV CGO_ENABLED 0
 
@@ -20,7 +20,7 @@ RUN go get github.com/tools/godep
 RUN go get ${PACKAGE}
 
 WORKDIR ${GOPATH}/src/${PACKAGE}
-RUN git checkout -b v${VERSION} v${VERSION}
+RUN git checkout ${VERSION}
 
 RUN godep restore
 
@@ -29,7 +29,7 @@ RUN GOPATH=`godep path`:${GOPATH} go build \
         -ldflags "-s -w -X ${PACKAGE}/version.Version ${VERSION}" \
         -v -a -installsuffix cgo \
         -o ./cayley \
-        .
+        ./cmd/cayley
 
 RUN rm -rf ./data/*
 RUN mkdir tmp log
@@ -39,4 +39,4 @@ COPY Dockerfile.final ./Dockerfile
 
 COPY Dockerfile.final /gopath/bin/Dockerfile
 
-CMD docker build -t alectolytic/cayley ${PWD}
+CMD docker build -t docker.io/alectolytic/cayley ${PWD}
