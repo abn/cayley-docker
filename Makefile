@@ -5,12 +5,18 @@ BUILDER		:= local/builder
 REPOSITORY	:= docker.io/alectolytic/cayley
 VERSION		:= f143602b
 
+BUILD_OPTS	:=
+
+ifdef NOCACHE
+	BUILD_OPTS	:= $(BUILD_OPTS) --no-cache
+endif
+
 .PHONY: all build clean
 
 all: build
 
 build:
-	@docker build -t $(BUILDER) $(ROOT)
+	@docker build $(BUILD_OPTS) -t $(BUILDER) $(ROOT)
 	@docker run \
 		--privileged \
 		-v /var/run/docker.sock:/var/run/docker.sock \
