@@ -2,7 +2,8 @@
 ROOT		:= $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 BUILDER		:= local/builder
 
-REPOSITORY	:= docker.io/alectolytic/cayley
+IMAGE		:= alectolytic/cayley
+REPOSITORY	:= docker.io/$(IMAGE)
 VERSION		:= f143602b
 
 BUILD_OPTS	:=
@@ -11,7 +12,7 @@ ifdef NOCACHE
 	BUILD_OPTS	:= $(BUILD_OPTS) --no-cache
 endif
 
-.PHONY: all build clean
+.PHONY: all build clean tag tag/$(VERSION) push push/$(VERSION)
 
 all: build
 
@@ -23,14 +24,17 @@ build:
 		-v $(shell which docker):$(shell which docker) \
 		-it $(BUILDER)
 
-push/$(VERSION):
-	@docker tag -f $(REPOSITORY):latest $(REPOSITORY):$(VERSION)
+tag/$(VERSION):
+	@docker tag -f $(IMAGE):latest $(REPOSITORY):$(VERSION)
+
+tag: tag/$(VERSION)
+	@docker tag -f $(REPOSITORY):$(VERSION) $(REPOSITORY):latest
+
+push/$(VERSION): tag
 	@docker push $(REPOSITORY):$(VERSION)
 
-push/latest:
+push: | push/$(VERSION)
 	@docker push $(REPOSITORY):latest
-
-push: | push/$(VERSION) push/latest
 
 bumpversion:
 	@sed -i s/'ENV VERSION .*$$'/'ENV VERSION $(VERSION)'/ $(ROOT)/Dockerfile
