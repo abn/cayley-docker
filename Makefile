@@ -30,6 +30,8 @@ push/$(VERSION):
 push/latest:
 	@docker push $(REPOSITORY):latest
 
+push: | push/$(VERSION) push/latest
+
 bumpversion:
 	@sed -i s/'ENV VERSION .*$$'/'ENV VERSION $(VERSION)'/ $(ROOT)/Dockerfile
 	@sed -ie s/'^\(VERSION\s*:=\s\).*$$'/'\1$(VERSION)'/ $(ROOT)/Makefile
