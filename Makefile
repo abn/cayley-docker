@@ -24,5 +24,11 @@ push/$(VERSION):
 push/latest:
 	@docker push $(REPOSITORY):latest
 
+bumpversion:
+	@sed -i s/'ENV VERSION .*$$'/'ENV VERSION $(VERSION)'/ $(ROOT)/Dockerfile
+	@sed -ie s/'^\(VERSION\s*:=\s\).*$$'/'\1$(VERSION)'/ $(ROOT)/Makefile
+	@git add $(ROOT)/Dockerfile $(ROOT)/Makefile
+	@git commit -m "Update to $(VERSION)"
+
 clean:
 	@docker rmi -f $(BUILDER)
