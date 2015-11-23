@@ -13,14 +13,14 @@ docker.io/alectolytic/cayley    latest  9f8c078ba15a    17 minutes ago  13.34 MB
 ```
 
 ## Persisted data deployment
-In this example we deploy cayley with data persisted via a data container and mongo db as a backend.
+In this example we deploy cayley with data persisted via a data container and mongo db or PostgreSQL as a backend.
 
-#### Initialization
+#### Initialization - mongo db
 ```sh
-# create data container
-docker create  --entrypoint=_ -v /data -v /data/db -v /log --name cayley-data scratch
+# create data storage container
+docker run --name cayley-data --entrypoint /bin/echo mongo Data-only container for cayley
 
-# start mongo container
+# start database container
 docker run -d --volumes-from cayley-data --name cayley-mongo mongo
 
 # initialize database
@@ -38,13 +38,36 @@ docker run -d --name cayley -p 64210:64210 \
   -db="mongo" -dbpath="mongo:27017"
 ```
 
+#### Initialization - PostgreSQL
+```sh
+# create data storage container
+docker run --name cayley-data --entrypoint /bin/echo postgres Data-only container for cayley
+
+# start database container
+docker run -d --name cayley-postgres -e POSTGRES_PASSWORD=cayley --volumes-from cayley-data postgres
+
+# initialize database
+docker run --rm -it --name cayley \
+  --link cayley-postgres:postgres \
+  --volumes-from cayley-data \ 
+  alectolytic/cayley init -db=sql \
+  -dbpath="postgres://postgres:cayley@postgres:5432/cayley?sslmode=disable"
+
+# start cayley as required
+docker run -d --name cayley -p 64210:64210 \
+  --link cayley-postgres:postgres \
+  --volumes-from cayley-data \ 
+  alectolytic/cayley  http -host="0.0.0.0" -db=sql \
+  -dbpath="postgres://postgres:cayley@postgres:5432/cayley?sslmode=disable"
+```
+
 #### Starting and stopping
 You can start or stop cayley using the following command.
 ```sh
 # Starting
-docker start cayley-mongo cayley
+docker start cayley-[mongo|postgres] cayley
 # stopping
-docker stop cayley cayley-mongo
+docker stop cayley cayley-[mongo|postgres]
 ```
 
 #### Accessing data
