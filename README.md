@@ -18,7 +18,7 @@ In this example we deploy cayley with data persisted via a data container and mo
 #### Initialization - mongo db
 ```sh
 # create data storage container
-docker run --name cayley-data --entrypoint /bin/echo mongo Data-only container for cayley
+docker create -v /data -v /data/db -v /log --name cayley-data tianon/true
 
 # start database container
 docker run -d --volumes-from cayley-data --name cayley-mongo mongo
@@ -41,7 +41,7 @@ docker run -d --name cayley -p 64210:64210 \
 #### Initialization - PostgreSQL
 ```sh
 # create data storage container
-docker run --name cayley-data --entrypoint /bin/echo postgres Data-only container for cayley
+docker create -v /data -v /data/db -v /log --name cayley-data tianon/true
 
 # start database container
 docker run -d --name cayley-postgres -e POSTGRES_PASSWORD=cayley --volumes-from cayley-data postgres
@@ -51,14 +51,14 @@ docker run --rm -it --name cayley \
   --link cayley-postgres:postgres \
   --volumes-from cayley-data \ 
   alectolytic/cayley init -db=sql \
-  -dbpath="postgres://postgres:cayley@postgres:5432/cayley?sslmode=disable"
+  -dbpath="postgres://postgres:cayley@postgres:5432/?sslmode=disable"
 
 # start cayley as required
 docker run -d --name cayley -p 64210:64210 \
   --link cayley-postgres:postgres \
   --volumes-from cayley-data \ 
   alectolytic/cayley  http -host="0.0.0.0" -db=sql \
-  -dbpath="postgres://postgres:cayley@postgres:5432/cayley?sslmode=disable"
+  -dbpath="postgres://postgres:cayley@postgres:5432/?sslmode=disable"
 ```
 
 #### Starting and stopping
