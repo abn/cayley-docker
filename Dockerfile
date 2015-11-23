@@ -12,7 +12,7 @@ ENV PATH /go/bin:${PATH}
 RUN mkdir -p ${GOPATH}
 
 ENV PACKAGE github.com/google/cayley
-ENV VERSION 250ad966
+ENV VERSION f143602b
 ENV GO_BUILD_TAGS netgo
 ENV CGO_ENABLED 0
 

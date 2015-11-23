@@ -3,7 +3,7 @@ ROOT		:= $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 BUILDER		:= local/builder
 
 REPOSITORY	:= docker.io/alectolytic/cayley
-VERSION		:= master
+VERSION		:= f143602b
 
 .PHONY: all build clean
 
